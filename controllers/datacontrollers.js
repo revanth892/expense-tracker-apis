@@ -163,5 +163,92 @@ const getbyamount=async(req,res)=>{
     }
 }
 
+const getone=async(req,res)=>{
+    const userid=req.id;
+    const {id}=req.query;
+    let data;
+    // console.log(0)
+    // console.log(userid)
+    // console.log(1)
+    // console.log(id)
+    // console.log(2)
+        try{  
+                // console.log(3)
+                data= await Record.findById(id)
+                // console.log(4)
+                // console.log(data)
+                if(data.userid === userid)
+                {    
+                    res.status(200).json({message:"few record found",data:data})
+                }
+                else 
+                {
+                    res.status(400).json({message:"not matched"})
+                }
+        }
+    catch(err)
+    {
+        console.error("Error creating record:",err);
+        res.status(500).json({message:"internal server error"})
+    }
+}
 
-module.exports={createRecord,getall,getbymonth,getbyamount};
+const updateone=async(req,res)=>{
+    const userid=req.id;
+    let {description,amount,income,expense,date,month} = (req.body.data);
+    const {id}=req.query;
+    let data;
+    // console.log(userid)
+        try{  
+                data= await Record.findByIdAndUpdate(id,{description,amount,income,expense,date,month},{new:true})
+                if(data.userid === userid)
+                {
+                    res.status(200).json({message:"updated successfully",data:data})
+                }
+                else{
+                    res.status(400).json({message:"not matched"})
+                }
+        }
+    catch(err)
+    {
+        console.error("Error creating record:",err);
+        res.status(500).json({message:"internal server error"})
+    }
+}
+
+// const deleteone=async(req,res)=>{
+//     const userid=req.id;
+//     const {id}=req.query;
+//     let data;
+//     // console.log(userid)
+//         try{  
+//                 data= await Record.findByIdAndDelete(id)
+//                 res.status(200).json({message:"updated successfully",data:data})
+//         }
+//     catch(err)
+//     {
+//         console.error("Error record:",err);
+//         res.status(500).json({message:"internal server error"})
+//     }
+// }
+
+const deleteone = async (req, res) => {
+    const userid = req.id;
+    const { id } = req.query;
+
+    try {
+        const data = await Record.findByIdAndDelete(id);
+        // console.log(data)
+        if (data) {
+            res.status(200).json({ message: "Record deleted successfully", data: data });
+        } else {
+            res.status(404).json({ message: "Record not found" });
+        }
+    } catch (err) {
+        console.error("Error deleting record:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+
+module.exports={createRecord,getall,getbymonth,getbyamount,getone,updateone,deleteone};
