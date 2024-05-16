@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
-const expense = new Schema({
+const record = new Schema({
     userid: {
         type: String,
         require: true,
@@ -41,4 +41,4 @@ const expense = new Schema({
     }
 })
 
-module.exports = mongoose.model('Expenses', expense)
+module.exports = mongoose.model('Records', record)

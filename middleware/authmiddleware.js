@@ -4,12 +4,12 @@ const secretkey='SECRETKEY'
 
 const authenticateToken = (req,res,next)=>{
     const authHeader= req.headers['authorization'];
-    console.log(authHeader);
+    // console.log(authHeader);
     const token=authHeader.split(' ')[1];
     if(token)
     {
         const decodededid=jwt.verify(token,secretkey)
-        console.log(decodededid)
+        // console.log(decodededid)
         // res.status(200).json({message:"success in verifying token"});
         req.id=decodededid;
         next();
