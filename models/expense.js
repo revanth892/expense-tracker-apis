@@ -33,6 +33,11 @@ const expense = new Schema({
         type: String,
         require: false,
         default: "NONE"
+    },
+    month:{
+        type:String,
+        require:false,
+        default:"NONE"
     }
 })
 
