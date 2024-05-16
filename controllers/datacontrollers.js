@@ -55,36 +55,7 @@ const getall=async(req,res)=>{
         res.status(500).json({message:"internal server error"})
     }
 }
-// const getall = async (req, res) => {
-//     const userid = req.id;
-//     const expense = req.query.expense === 'true';
-//     const income = req.query.income === 'true';
-//     let data;
 
-//     console.log(userid);
-    
-//     try {
-//         if (expense && income) {
-//             data = await Record.find({ userid: userid });
-//         } else if (expense && !income) {
-//             console.log(2);
-//             data = await Record.find({ userid: userid, expense: true });
-//         } else if (!expense && income) {
-//             data = await Record.find({ userid: userid, income: true });
-//         } else {
-//             data = await Record.find({ userid: userid, expense: false, income: false });
-//         }
-
-//         if (!data || data.length === 0) {
-//             res.status(404).json({ message: "No records found" });
-//         } else {
-//             res.status(200).json({ message: "Records found", data: data });
-//         }
-//     } catch (err) {
-//         console.error("Error fetching records:", err);
-//         res.status(500).json({ message: "Internal server error" });
-//     }
-// };
 
 const getbymonth=async(req,res)=>{
     const userid=req.id;
@@ -128,4 +99,69 @@ const getbymonth=async(req,res)=>{
 }
 
 
-module.exports={createRecord,getall,getbymonth};
+
+const getbyamount=async(req,res)=>{
+    const userid=req.id;
+    const expense=req.query.expense==='true';
+    const income=req.query.income==='true';
+    const greater=req.query.greater==='true';
+    const amount=req.query.amount;
+
+    // const lesser=req.query.lesser==='true'
+    let data;
+    // console.log(user)
+        try{  
+            if(expense=== true && income=== true)
+            {
+                if(greater===true)
+                {
+                    data= await Record.find({userid:userid,amount:{$gte:amount}})
+                }
+                else
+                {
+                    data= await Record.find({userid:userid,amount:{$lte:amount}})
+                }
+                // data= await Record.find({userid:userid,amount:{$gte:amount}})
+            }
+            else if(expense===true && income===false)
+            {
+                if(greater===true)
+                {
+                        data= await Record.find({userid:userid,amount:{$gte:amount},expense:true})
+                }
+                else 
+                {
+                        data= await Record.find({userid:userid,amount:{$lte:amount},expense:true})
+                }
+            }
+            else if(expense===false && income===true)
+            {
+                if(greater===true)
+                    {
+                            data= await Record.find({userid:userid,amount:{$gte:amount},income:true})
+                    }
+                    else 
+                    {
+                            data= await Record.find({userid:userid,amount:{$lte:amount},income:true})
+                    }
+            }
+            
+            
+            if(!data)
+            {
+                res.status(400).json({message:"No records found"})
+            }
+            else
+            {
+                res.status(200).json({message:"few record found",data:data})
+            }
+    }
+    catch(err)
+    {
+        console.error("Error creating record:",err);
+        res.status(500).json({message:"internal server error"})
+    }
+}
+
+
+module.exports={createRecord,getall,getbymonth,getbyamount};
