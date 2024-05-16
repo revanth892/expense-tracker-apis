@@ -27,14 +27,15 @@ const login=async(req,res)=>{
     // console.log(1)
     try{
         // console.log(2)
-        if()
-        {
-            const user =await User.find({username:username,password:password})
-            res.status(201).json({message:"User logged successfully",user:user})
-        }
-        else{
-            
-        }
+            const user =await User.findOne({username:username})
+            const hashed_password = await bcrypt.compare(password,user.password)
+            if(hashed_password)
+            {
+                res.status(200).json({message:"User logged successfully",user:user})
+            }
+            else{
+                res.status(400).json({message:"Incorrect username or password"})
+            }
     }catch(err)
     {
         console.error("Error creating blog:", err);
